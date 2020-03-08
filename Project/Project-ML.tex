@@ -1,0 +1,275 @@
+\documentclass[11pt,a4paper,twocolumn]{article}%{amsart}
+\usepackage[left = 26mm, top = 25mm, right = 26mm, bottom = 28mm]{geometry}
+\usepackage{amssymb,amsfonts}
+\usepackage{natbib}
+\usepackage{sectsty}
+\usepackage{float}
+\usepackage[utf8]{inputenc}
+\usepackage{amsthm}
+\usepackage{amsmath}
+\sectionfont{\large}
+%\addtolength{\topmargin}{-.875in}
+%\addtolength{\footskip}{1.875in}
+%\textwidth=16.000cm \textheight=23.000cm \topmargin=-1.00cm
+%\oddsidemargin=0.00cm \evensidemargin=0.00cm \headheight=14.4pt
+%\headsep=1.2500cm \numberwithin{equation}{section}
+%\hyphenation{semi-stable} \emergencystretch=11pt
+
+%%% ----------------------------------------------------------------------
+%%% ---------------------------------------------------------------------
+
+\newcommand{\DQ}{d_Q}
+\newcommand{\DQPi}{\ensuremath{d_Q^{\pi}}}
+
+\title{CS5350/6350 Project Midterm Report \\
+ \large Simple Distances for Trajectories via Landmarks \citep{phillips2018simple}}
+\author{Hasan Pourmahmood \texttt{[u1255635@utah.edu]} 
+\and
+Aravinda Kanchana Ruwanpathirana
+\texttt{[u1209978@utah.edu]} 
+}
+\date{}
+%%% ----------------------------------------------------------------------
+%%% ----------------------------------------------------------------------
+%\baselineskip= 0.6cm
+
+ %    \author[H. P. Aghababa]{Hasan Pourmahmood Aghababa}
+ %    \author[K. Ruwanpathirana]{Kanchana Ruwanpathirana}
+
+%   \email{u1255635@utah.edu, pourmahmood@gmail.com} 
+
+
+%%% ---------------------------------------------------------------------
+
+\begin{document}
+
+\maketitle
+%%% ----------------------------------------------------------------------
+
+% ----------------------------------------------------------------------
+\section{Introduction} 
+
+There are many different popular metrics that can be used (e.g. Discrete Frechet distance, dynamic time wrapping distance, etc.) to measure the distance between two trajectories (i.e. piecewise linear curves), but most of them have drawbacks when it comes to using them in machine learning tasks. The paper, \citep{phillips2018simple} introduces a new metric that data-based (based on special landmarks) distance, which might be more desirable in a machine learning setting. Our goal is to test the claims in the paper against different machine learning tasks and on different classes of datatsets and also see how the proposed metrics can be modified for different tasks. 
+
+%The main metrics provided are,
+\iffalse
+Our goal is to test the claims in the paper against different machine learning tasks and on different classes of datatsets and also see how the proposed metrics can be modified and generalized. In fact, the paper itself has a conclusive section on experiments which includes running benchmarks on the introduced  metrics against a selection of datasets using methods such as $k$-means clustering, approximate nearest neighbors, SVM and etc. which shows very good results. We hope to extend on this and see how effective it is against some other tasks as well as how well it generalizes.
+
+\section{Project Plan}
+We hope to,
+\begin{enumerate}
+\itemsep0em
+\item Run clustering tasks with the new metric on a collection of datasets (excluding the ones used in the paper).  
+\item Examine how we can use this metric in other machine learning tasks and benchmark its performance in comparison to most common metrics. 
+\item Try to modify the distance, if necessary, to get a better estimation of distance between trajectories that perform better than their distance. 
+\iffalse
+(Remove this one or the next one. What is your opinion?)
+\item Try to generalize the distance to a larger class of curves such as piecewise smooth ones. 
+\fi
+\end{enumerate}
+
+Overall, our goal is to identify how we can better utilize the given metrics and also what specifics tasks they are more suited for.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\fi
+\section{Preliminaries}
+
+In this section we bring main concepts and definitions we need in the project. 
+
+A continuous piece-wise linear curve $\gamma: [0,1] \to \mathbb{R}^2$ is called a trajectory. We denote the set of trajectories by $\Gamma$. So any $\gamma \in \Gamma$ can be identified by a series of critical points $\langle c_0, c_1,\ldots, c_k \rangle$, where we assume that $s_i = c_{i-1} -c_i$ is the line segment between critical points $c_{i-1}$ and $c_i$. 
+\iffalse
+We assume that Each critical point $c_i$ is $\tau$-separated, that is the ball $B(c_i, \tau)$ only intersects the two adjacent segments $s_{i-1}$ and $s_i$ of any $\gamma \in \Gamma$ and also $s_i$'s have at most 3 points in common. 
+\fi
+
+Let $Q=\{q_1, \ldots, q_n\}$ be a set of landmarks in $\mathbb{R}^2$ and let $\gamma\in \Gamma$. For each $i\in \{1,2, \ldots,n\}$ define $v_i(\gamma) = \|p_i - q_i\|$, where $p_i = {\rm argmin}_{p \in \gamma} \|p-q_i\|$, and set $v(\gamma) = (v_i(\gamma), \ldots, v_1(\gamma))$.
+
+The following distance is defined on $\Gamma$ in \citep{phillips2018simple}, which is a data based metric.
+
+For a fixed set of landmarks $Q=\{q_1, \ldots, q_n\}$ the distance between two curves $\gamma, \gamma' \in \Gamma$ is the normalize Euclidean distance of $v(\gamma)$ and $v(\gamma')$, i.e. 
+
+$d_Q(\gamma, \gamma') = \Big(\frac{1}{n} \sum_{i=1}^n |v_i(\gamma) - v_i(\gamma')|^2 \Big)^{1/2}$.
+
+Another metric defined there is 
+
+$d_Q^{\pi}(\gamma, \gamma') = \frac{1}{n} \sum_{i=1}^n \|p_i(\gamma) - p_i(\gamma')\|$,
+
+where $p_i(\gamma) = {\rm argmin}_{p \in \gamma} \|p-q_i\|$ and $p_i(\gamma') = {\rm argmin}_{p \in \gamma} \|p-q_i\|$.  
+
+It is worth mentioning that these metrics are generalized to a larger set of curves, not just for trajectories, in \citep{phillips2019sketched}, but they are more of interest mathematically. 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Progress Summary}
+
+The Section~\ref{sec:data} gives an overview of the data that has been acquired and the Section~\ref{sec:impl} gives the details of the implemented programs. The Section~\ref{sec:res} gives an overview of the results we have seen so far, from the preliminary tests.
+
+\subsection{Dataset Acquisition}\label{sec:data}
+
+Dataset acquisition phase included the procurement of the following major datasets which include the location data of people/ taxis and etc.
+
+\begin{enumerate}
+    \item Geolife Trajectories 1.3~\citep{zheng2008understanding,zheng2009mining,zheng2010geolife}
+    
+    Geolife Trajectories dataset is a GPS trajectory dataset that was collected as part of the Geolife project by Microsoft Research Asia and includes data of 182 users from 2007 to 2012, with the points being $\approx 5-10$ meters apart. .
+    
+    \item T-drive Taxi Trajectories~\citep{yuan2010t-drive}
+    
+    The T-drive Taxi Trajectory dataset contains trajectory info from 10357 taxis in Beijing for the time duration from February 2 to 8, 2008 with about 15 million GPS location points in total. The sampling was carried out at a rate of once every $177s$ and about every $623m$.
+    
+    \item GPS Trajectories Data Set~\citep{cruz2015}
+    
+    This is a relatively small dataset UCI Machine Learning repository and this contains 163 data-points.
+    
+    \item Manhattan Taxi Trajectory Dataset ~\citep{Benson-2017-spacey}
+    
+    \item CVRR Trajectory Clustering Dataset ~\citep{brendan2009}
+    
+    \item NY City, Roma City and Porto City datasets
+\end{enumerate}
+
+\subsection{Implementation}\label{sec:impl}
+
+The implementation is Python based. The trajectories are maintained as an ordered list of line segments and line segment class basically contains the definition of a line (start and end point) and the functions to calculate the distance to the line given a point. The distance metric class basically handles the calculation of the trajectory distances as well as the euclidean distances. At the moment the calculation algorithms implemented are naive, direct methods which we observed to have a large time complexity. The plans to mitigate this are included in the Section~\ref{sec:fut}  
+
+The ML models implemented include k-Medoids algorithm which uses an iterative approach of local swaps to select a set of best k centers closer to the data. In the implementation, the landmarks are selected randomly, but this method requires further analysis. The SVM implementation relies on the SVC function provided in the Sklearn package. The distance metrics are provided as pre-computed kernels.   
+
+The data extracted from the datasets are in GPS coordinates, so we use a code snippet based on UTM package and the UTM translation equations, to convert the GPS coordinates to XY coordinates.
+\subsection{Experimental Results}\label{sec:res}
+
+The Section~\ref{sec:kmed} gives the results from running k-Medoids with $k=2$ and using Euclidean distance and the two distance metrics introduced. The Section~\ref{sec:svm} gives the results from running SVM with precomputed distances set as the kernel (with $2$ unique labels).  
+\subsubsection{k-Medoids Clustering} \label{sec:kmed}
+
+The testing was carried out on a small sample of trajectories ($\sim 20$), each of length 100 from 2 users in the Geolife dataset. The landmark points were randomly generated within a confined area around the spread of the trajectories. Multiple trials were carried out each with maximum 10 iterations so as to see the effect of the different metrics.
+
+    \begin{table}[!htbp]
+        \label{tbl:kmed}
+		\centering
+		\begin{tabular}{|c|c|c|c|}
+		    \hline
+			 & Euclid & $\DQ$ & $\DQPi$\\ 
+			\hline\hline
+			mean & 0.32 & 0.325 & 0.375 \\ \hline
+			min & 0.15 & 0.2 & 0.2 \\ \hline
+			max & 0.45 & 0.45 & 0.45 \\ \hline
+			median & 0.3 & 0.3 & 0.425 \\ \hline
+			modes & 0.45 & 0.45 & 0.45 \\ \hline
+		\end{tabular}
+        \caption{The mean, median and other statistical properties of the k-Medoid error with Euclidean distance, $\DQ$ and $\DQPi$}
+	\end{table}
+	
+The error rates in Table~\ref{tbl:kmed} could be seen to be the same for medians, modes, and max in all 3 distance setups, but the Euclid distance seems to perform well in this case when we compare the mean and the minimums.
+
+\subsubsection{Kernelized SVM} \label{sec:svm}
+
+The setup is similar to the case of~\ref{sec:kmed} but in this case we used $\approx 40$ samples.
+
+    \begin{table}[!htbp]
+        \label{tbl:SVM}
+		\centering
+		\begin{tabular}{|c|c|c|c|}
+		    \hline
+			 & Euclid & $\DQ$ & $\DQPi$\\ 
+			\hline\hline
+			mean & 0.6325 & 0.585 & 0.6425 \\ \hline
+			min & 0.5 & 0.5 & 0.5 \\ \hline
+			max & 0.95 & 0.875 & 0.95 \\ \hline
+			median & 0.55 & 0.525 & 0.55 \\ \hline
+			modes & 0.5 & 0.5 & 0.5 \\ \hline
+		\end{tabular}
+        \caption{The mean, median and other statistical properties of the SVM error with Euclidean distance, $\DQ$ and $\DQPi$}
+	\end{table}
+
+The performance results of SVM (provided in Table~\ref{tbl:SVM}) can be seen to be better when the metric $\DQ$ is used. The performance of the Euclidean distance and $\DQPi$ are almost the same ($\DQPi$ performs slightly worse) in the selected dataset.	
+\section{Future Plans}\label{sec:fut}
+
+The following tasks are planned for the next phase of the project.
+\begin{enumerate}
+    \item Update and optimize the distance calculations removing dependencies on Sklearn's SVC
+    
+    The plan is to optimize the distance calculation by reducing the effective trajectory components from a given landmark point using distance cutoff radii. This will be useful in mitigating the performance issues when it comes to local algorithms such as k-Medoids. For the SVM, we plan to implement from-scratch module that would enable us to see how different kernel structures (rbf, linear and etc.) perform, when the distance measures are substituted by trajectory distance measures.
+    
+    
+    \item Exploring how the metric can be used in a decision tree setting.
+    
+    The idea in this case is to view the individual distances from the landmark points as individual features. We plan to look into how using a distance measure from the trajectories and training on a discretized version of them would be applicable in a decision tree setting. The hope is that this will be useful in measuring the quality of the effect of each landmark on the trajectories and would thus help reduce the number of landmarks used at a minimal loss. 
+    
+    \item Implementing Discrete Frechet Distance and Dynamic Time Warping Distance for benchmarking.
+    
+    \item Exploring other machine learning tasks for which the given trajectory distance measure could be useful.
+    
+    \item Exploring the effect of dimensionality reduction (using MDS, t-SNE and etc.) using the given metric
+    
+    We hope to look into how the data would perform if the trajectories were mapped to a point space by running dimensioanlity reduction techniques and the effect of mapping the trajectories to points in a $n$-dimensional space, where $n$ is the number of landmarks. This task will be carried out if the time permits.
+    
+    \item Obtaining the landmarks given the trajectories and the distances.
+    
+    We hope to implement the algorithm introduced in~\citep{phillips2019sketched}  and try to obtain the landmark points from the trajectories. This task will be carried out if the time permits.
+\end{enumerate}
+\bibliographystyle{abbrvnat}
+%\bibliographystyle{plain}
+\bibliography{references}
+
+@misc{phillips2018simple,
+    title={Simple Distances for Trajectories via Landmarks},
+    author={Jeff M. Phillips and Pingfan Tang},
+    year={2019},
+    eprint={1804.11284},
+    archivePrefix={arXiv},
+    primaryClass={cs.CG}
+}
+
+@misc{phillips2019sketched,
+    title={Sketched MinDist},
+    author={Jeff M. Phillips and Pingfan Tang},
+    year={2019},
+    eprint={1907.02171},
+    archivePrefix={arXiv},
+    primaryClass={cs.CG}
+}
+
+@InProceedings{zheng2009mining,
+author = {Zheng, Yu and Xie, Xing and Ma, Wei-Ying},
+title = {Mining Interesting Locations and Travel Sequences From GPS Trajectories},
+year = {2009},
+}
+
+@Article{zheng2010geolife,
+author = {Zheng, Yu and Xie, Xing and Ma, Wei-Ying},
+title = {GeoLife: A Collaborative Social Networking Service among User, location and trajectory},
+year = {2010},
+}
+
+@InProceedings{zheng2008understanding,
+author = {Zheng, Yu and Xie, Xing and Ma, Wei-Ying},
+title = {Understanding Mobility Based on GPS Data},
+year = {2008},
+}
+
+@InProceedings{yuan2010t-drive,
+author = {Yuan, Jing and Zheng, Yu and Zhang, Chengyang and Xie, Wenlei and Xie, Xing and Sun, Guangzhong and Huang, Yan},
+title = {T-Drive: Driving Directions Based on Taxi Trajectories},
+year = {2010},
+}
+
+@inproceedings{cruz2015,
+author = {Cruz, Michael},
+year = {2015},
+title = {Grouping similar trajectories for carpooling purposes},
+}
+
+@article{brendan2009,
+author = {Morris, Brendan and Trivedi, Mohan},
+year = {2009},
+title = {Learning Trajectory Patterns by Clustering: Experimental Studies and Comparative Evaluation},
+}
+
+@article{Benson-2017-spacey,
+  year  = {2017},
+  author = {Austin R. Benson and David F. Gleich and Lek-Heng Lim},
+  title = {The Spacey Random Walk: A Stochastic Process for Higher-Order Data},
+}
+\end{document}

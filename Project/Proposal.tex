@@ -1,0 +1,63 @@
+\documentclass[12pt,a4paper]{amsart}
+\usepackage{amssymb,amsfonts}
+
+\textwidth=16.000cm \textheight=23.000cm \topmargin=-1.00cm
+\oddsidemargin=0.00cm \evensidemargin=0.00cm \headheight=14.4pt
+\headsep=1.2500cm \numberwithin{equation}{section}
+\hyphenation{semi-stable} \emergencystretch=11pt
+
+
+
+%%% ----------------------------------------------------------------------
+%%% ----------------------------------------------------------------------
+
+\begin{document}
+
+\title[Proposal for Machine Learning Course]
+ {Proposal for Machine Learning Course}
+
+%%% ----------------------------------------------------------------------
+%%% ----------------------------------------------------------------------
+\baselineskip= 0.6cm
+
+ %    \author[H. P. Aghababa]{Hasan Pourmahmood Aghababa}
+ %    \author[K. Ruwanpathirana]{Kanchana Ruwanpathirana}
+
+%   \email{u1255635@utah.edu, pourmahmood@gmail.com} 
+
+
+%%% ----------------------------------------------------------------------
+\maketitle
+%%% ----------------------------------------------------------------------
+
+% ----------------------------------------------------------------------
+\hspace{-0.55cm} {\bf Title of project:} Simple Distances for Trajectories via Landmarks \vspace{0.2cm} \\
+{\bf Team members:} Hasan Pourmahmoodaghababa and Kanchana Ruwanpathirana \vspace{0.2cm} \\
+{\bf Description of project:}
+This project will be based on a paper by Jeff M. Phillips and Pingfan Tang entitled ``Simple Distances for Trajectories via Landmarks" published in 2019. There are many distances for measuring the distance of two trajectories, i.e. a piecewise linear curves, like Frechet distance, discrete Frechet distance, Dynamic time wrapping distance, Hausdorff distance, etc. None of them is contingent upon a dataset and their input is not a vector which is desirable in machine learning. In that paper, the authors have introduced such a desirable metric usable in machine learning and they have done some machine learning tasks on some datasets, utilizing that measure, in order to compare its performance. In fact they have done $k$-means clustering, and directly has plugged into approximate nearest neighbor approaches. Our aim is:
+\begin{enumerate}
+\item Doing clustering with that metric on other datasets.  
+\item Examining other machine learning tasks with this metric to find out how it performs in comparison with some other metrics. 
+\item Modifying the distance, if necessary, to get a better estimation of distance between trajectories that perform better than their distance. 
+\item Generalizing the distance to a larger class of curves such as piecewise smooth ones. 
+\end{enumerate}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+\end{document}
